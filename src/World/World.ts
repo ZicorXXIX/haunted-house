@@ -2,6 +2,7 @@ import { createCamera } from "./components/camera";
 import { createCube } from "./components/cube";
 import { createPlane } from "./components/plane";
 import { createScene } from "./components/scene";
+import { createControls } from "./systems/controls";
 import { Loop } from "./systems/Loop";
 import { createRenderer } from "./systems/renderer";
 import { Resizer } from "./systems/Resizer";
@@ -17,6 +18,10 @@ class World {
         this.renderer = createRenderer()
         this.loop = new Loop(this.scene, this.camera, this.renderer)
         container.appendChild(this.renderer.domElement)
+
+        const controls = createControls(this.camera, container as HTMLElement)
+        this.loop.updatables.push(controls)
+
         const cube = createCube()
         const plane = createPlane()
         this.scene.add(cube, plane)
