@@ -4,6 +4,7 @@ import { createPlane } from "./components/plane";
 import { createScene } from "./components/scene";
 import { Loop } from "./systems/Loop";
 import { createRenderer } from "./systems/renderer";
+import { Resizer } from "./systems/Resizer";
 
 class World {
     private scene: ReturnType<typeof createScene>
@@ -16,14 +17,10 @@ class World {
         this.renderer = createRenderer()
         this.loop = new Loop(this.scene, this.camera, this.renderer)
         container.appendChild(this.renderer.domElement)
-        //Put in resizer class
-        this.renderer.setSize(container.clientWidth, container.clientHeight)
-        this.renderer.setPixelRatio(window.devicePixelRatio);
-        this.camera.aspect = container.clientWidth / container.clientHeight
         const cube = createCube()
         const plane = createPlane()
         this.scene.add(cube, plane)
-
+        const resizer = new Resizer(container, this.camera, this.renderer)
     }
 
     //render on demand (produce a single frame)
