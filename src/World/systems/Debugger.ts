@@ -1,5 +1,5 @@
 import GUI from "lil-gui";
-import { BoxGeometry, type Mesh } from "three";
+import { BoxGeometry, Color, Light, type Mesh } from "three";
 
 class Debugger {
     private gui: GUI
@@ -17,7 +17,6 @@ class Debugger {
         }
     }
 
-
     private setKeyboardShortcuts() {
         window.addEventListener("keydown", (event) => {
             if (event.key == 'h') {
@@ -28,6 +27,11 @@ class Debugger {
             }
         })
     }
+
+
+    /**
+     * Mesh Tweaks
+     */
 
     private createMeshControls(mesh: Mesh, name: string) {
         const meshFolder = this.gui.addFolder(name)
@@ -101,6 +105,31 @@ class Debugger {
 
     }
 
+
+    /**
+     * Lights Tweaks
+     */
+    private addLightTweaks(folder: GUI, light: Light) {
+        const positionFolder = folder.addFolder('position')
+        positionFolder.add(light.position, 'x', -10, 10, 0.1)
+        positionFolder.add(light.position, 'y', -10, 10, 0.1)
+        positionFolder.add(light.position, 'z', -10, 10, 0.1)
+
+        if ('intensity' in light) {
+            folder.add(light, 'intensity', 0, 10, 0.1);
+        }
+
+        if ('color' in light) {
+            folder.addColor({ color: `#${light.color.getHexString()}` }, 'color')
+                .onChange((value: string) => {
+                    light.color = new Color(value);
+                })
+        }
+
+    }
+
+
+
     /**
      * addMesh
      */
@@ -108,6 +137,16 @@ class Debugger {
         const meshName = name || mesh.name || `Mesh_${this.meshes.size + 1}`
         this.meshes.set(meshName, mesh)
         this.createMeshControls(mesh, meshName)
+        return this
+    }
+
+    /**
+     * addLight
+     */
+    public addLight(light: Light, name: string): this {
+        const lightName = name || light.name
+        const lightFolder = this.gui.addFolder(lightName)
+        this.addLightTweaks(lightFolder, light)
         return this
     }
 
