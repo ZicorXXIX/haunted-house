@@ -1,13 +1,20 @@
 import { BoxGeometry, ConeGeometry, Group, Mesh, MeshStandardMaterial, PlaneGeometry, SphereGeometry } from "three";
+import { doorAlphaTexture, doorAoTexture, doorHeightTexture, doorMetalnessTexture, doorNormalTexture, doorRoughnessTexture, doorTexture, wallAoTexture, wallNormalTexture, wallRoughnessTexture, wallTexture } from "./textures";
 
 function createHouse() {
     const house = new Group()
 
     //walls
+    const wallMaterial = new MeshStandardMaterial({
+        map: wallTexture,
+        aoMap: wallAoTexture,
+        roughnessMap: wallRoughnessTexture,
+        normalMap: wallNormalTexture,
+    })
+    wallMaterial.normalScale.set(1, -1);
     const walls = new Mesh(
-        new BoxGeometry(4, 2.5, 4),
-        new MeshStandardMaterial({ color: 'brown' })
-    )
+        new BoxGeometry(4, 2.5, 4, 20, 20),
+        wallMaterial)
     walls.name = 'walls'
     walls.position.y = 2.5 / 2
     house.add(walls)
@@ -24,8 +31,19 @@ function createHouse() {
 
     //door
     const door = new Mesh(
-        new PlaneGeometry(2, 2),
-        new MeshStandardMaterial({ color: '#aa7b7b' })
+        new PlaneGeometry(2, 2, 20, 20),
+        new MeshStandardMaterial({
+            map: doorTexture,
+            aoMap: doorAoTexture,
+            transparent: true,
+            alphaMap: doorAlphaTexture,
+            displacementMap: doorHeightTexture,
+            displacementScale: 0.1,
+            metalnessMap: doorMetalnessTexture,
+            normalMap: doorNormalTexture,
+            roughnessMap: doorRoughnessTexture
+
+        })
     )
     door.name = 'door'
     door.position.y = 2 / 2

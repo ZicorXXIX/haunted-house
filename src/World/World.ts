@@ -1,6 +1,7 @@
 import { createLights } from "./components/ambientLight";
 import { createCamera } from "./components/camera";
 import { createCube } from "./components/cube";
+import { createFog } from "./components/fog";
 import { createGraves } from "./components/graves";
 import { createHouse } from "./components/house";
 import { createPlane } from "./components/plane";
@@ -30,11 +31,13 @@ class World {
         const graves = createGraves()
         const plane = createPlane()
         const lights = createLights()
+        const fog = createFog()
         const debugUi = new Debugger({})
         debugUi.addGroup(house, "House")
         debugUi.addGroup(lights, "Lights")
         // debugUi.addMesh(house, "cube")
         this.scene.add(house, plane, lights, graves)
+        this.scene.fog = fog
         const resizer = new Resizer(container, this.camera, this.renderer)
     }
 
