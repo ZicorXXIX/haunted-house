@@ -1,6 +1,7 @@
 import { createLights } from "./components/ambientLight";
 import { createCamera } from "./components/camera";
 import { createCube } from "./components/cube";
+import { createGraves } from "./components/graves";
 import { createHouse } from "./components/house";
 import { createPlane } from "./components/plane";
 import { createScene } from "./components/scene";
@@ -26,13 +27,14 @@ class World {
         this.loop.updatables.push(controls)
 
         const house = createHouse()
+        const graves = createGraves()
         const plane = createPlane()
         const lights = createLights()
         const debugUi = new Debugger({})
         debugUi.addGroup(house, "House")
         debugUi.addGroup(lights, "Lights")
         // debugUi.addMesh(house, "cube")
-        this.scene.add(house, plane, lights)
+        this.scene.add(house, plane, lights, graves)
         const resizer = new Resizer(container, this.camera, this.renderer)
     }
 
