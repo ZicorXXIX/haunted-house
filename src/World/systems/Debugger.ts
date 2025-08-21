@@ -1,5 +1,5 @@
 import GUI from "lil-gui";
-import { BoxGeometry, Color, Light, type Mesh } from "three";
+import { BoxGeometry, Color, Group, Light, type Mesh } from "three";
 
 class Debugger {
     private gui: GUI
@@ -148,6 +148,31 @@ class Debugger {
         const lightFolder = this.gui.addFolder(lightName)
         this.addLightTweaks(lightFolder, light)
         return this
+    }
+
+    /**
+     * addGroup
+     */
+    public addGroup(group: Group, name: string) {
+        const groupName = name || group.name
+        const groupFolder = this.gui.addFolder(groupName)
+
+        this.addGlobalMeshTweaks(groupFolder, group as unknown as Mesh)
+
+        group.children.forEach((child, index) => {
+            const childName = child.name || `${child.type}_${index}`
+
+            if ((child as Mesh).isMesh) {
+                const meshFolder = groupFolder.addFolder(child.name)
+                this.createMeshControls(child as Mesh, childName)
+            } else if ((child as Light).isLight) {
+                const lightFolder = groupFolder.addFolder(childName)
+                this.addLightTweaks(lightFolder, child as Light)
+            } else if ((child as Group).isGroup) {
+                this.addGroup(child as Group, childName)
+            }
+        })
+
     }
 
     /**
