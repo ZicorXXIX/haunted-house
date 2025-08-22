@@ -16,15 +16,15 @@ class Loop {
 
     start() {
         this.renderer.setAnimationLoop(() => {
-            this.tick()
+            const delta = clock.getElapsedTime()
+            this.tick(delta)
             this.renderer.render(this.scene, this.camera)
         })
     }
     stop() {
         this.renderer.setAnimationLoop(null)
     }
-    tick() {
-        const delta = clock.getDelta()
+    tick(delta: number) {
         for (let obj of this.updatables) {
             obj.tick(delta)
         }

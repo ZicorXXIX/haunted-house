@@ -1,6 +1,5 @@
 import { createLights } from "./components/ambientLight";
 import { createCamera } from "./components/camera";
-import { createCube } from "./components/cube";
 import { createFog } from "./components/fog";
 import { createGraves } from "./components/graves";
 import { createHouse } from "./components/house";
@@ -11,6 +10,8 @@ import { Debugger } from "./systems/Debugger";
 import { Loop } from "./systems/Loop";
 import { createRenderer } from "./systems/renderer";
 import { Resizer } from "./systems/Resizer";
+import { PointLight, type Object3D } from "three";
+import { createGhost } from "./components/gastly";
 
 class World {
     private scene: ReturnType<typeof createScene>
@@ -27,6 +28,11 @@ class World {
         const controls = createControls(this.camera, container as HTMLElement)
         this.loop.updatables.push(controls)
 
+        const aura = new PointLight('#ff00ff', 2, 3)
+        const gastly = createGhost(aura).then((gastly: Object3D) => {
+            this.scene.add(gastly)
+            this.loop.updatables.push(gastly)
+        })
         const house = createHouse()
         const graves = createGraves()
         const plane = createPlane()
@@ -36,7 +42,7 @@ class World {
         debugUi.addGroup(house, "House")
         debugUi.addGroup(lights, "Lights")
         // debugUi.addMesh(house, "cube")
-        this.scene.add(house, plane, lights, graves)
+        this.scene.add(aura, house, plane, lights, graves)
         this.scene.fog = fog
         const resizer = new Resizer(container, this.camera, this.renderer)
     }
