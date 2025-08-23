@@ -12,6 +12,7 @@ import { createRenderer } from "./systems/renderer";
 import { Resizer } from "./systems/Resizer";
 import { PointLight, type Object3D } from "three";
 import { createGhost, spawnGhosts } from "./components/gastly";
+import { createRandomlyMovingPointLights } from "./components/pointLights";
 
 class World {
     private scene: ReturnType<typeof createScene>
@@ -35,6 +36,8 @@ class World {
         //     this.scene.add(gastly)
         //     this.loop.updatables.push(gastly)
         // })
+        const rLights = createRandomlyMovingPointLights(this.scene)
+        this.loop.updatables.push(rLights)
         const house = createHouse()
         const graves = createGraves()
         const plane = createPlane()
@@ -48,6 +51,7 @@ class World {
         this.scene.fog = fog
         const resizer = new Resizer(container, this.camera, this.renderer)
     }
+
     private async setupGhosts() {
         try {
             const ghosts = await spawnGhosts(this.scene, { 'gastly': 3, 'haunter': 4 })
