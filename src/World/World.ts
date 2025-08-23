@@ -50,7 +50,7 @@ class World {
     }
     private async setupGhosts() {
         try {
-            const ghosts = await spawnGhosts(this.scene, 6)
+            const ghosts = await spawnGhosts(this.scene, { 'gastly': 3, 'haunter': 4 })
 
             ghosts.forEach((ghost: Object3D) => {
                 this.loop.updatables.push(ghost)
