@@ -17,6 +17,7 @@ function createHouse() {
         wallMaterial)
     walls.name = 'walls'
     walls.position.y = 2.5 / 2
+    walls.castShadow = true
     house.add(walls)
 
     //roof

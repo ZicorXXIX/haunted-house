@@ -1,4 +1,4 @@
-import { PointLight, Scene, type Object3D } from "three";
+import { PointLight, Scene, Vector3, type Object3D } from "three";
 import { GLTFLoader } from "three/examples/jsm/Addons.js";
 
 
@@ -45,6 +45,7 @@ async function spawnGhosts(scene: Scene, ghostsCount: { [key: string]: number })
 
 }
 
+
 function createGhost(path: string, scale: number, aura: PointLight, offsetX = 0, offsetZ = 0, radius = 3, speed = 1, flip: boolean): Promise<Object3D> {
     let gastly: Object3D;
     const loader = new GLTFLoader()
@@ -58,23 +59,20 @@ function createGhost(path: string, scale: number, aura: PointLight, offsetX = 0,
 
                 gastly.position.x = offsetX + Math.cos(delta * speed) * radius
                 gastly.position.z = offsetZ + Math.sin(delta * speed) * radius
-                gastly.position.y = Math.sin(delta * speed) * 0.5
+                gastly.position.y = Math.sin(delta * speed) + 0.5
 
                 const dirX = gastly.position.x - prevX
                 const dirZ = gastly.position.z - prevZ
 
                 // Only update rotation if there's significant movement
                 if (Math.abs(dirX) > 0.01 || Math.abs(dirZ) > 0.01) {
-                    // Look in the OPPOSITE direction (reverse the direction vector)
-                    if (flip) {
-                        const targetX = gastly.position.x - dirX
-                        const targetZ = gastly.position.z - dirZ
-                        gastly.lookAt(targetX, gastly.position.y, targetZ)
-                    } else {
-                        const targetX = gastly.position.x + dirX
-                        const targetZ = gastly.position.z + dirZ
-                        gastly.lookAt(targetX, gastly.position.y, targetZ)
-                    }
+                    const targetX = flip
+                        ? gastly.position.x - dirX
+                        : gastly.position.x + dirX;
+                    const targetZ = flip
+                        ? gastly.position.z - dirZ
+                        : gastly.position.z + dirZ;
+                    gastly.lookAt(targetX, gastly.position.y, targetZ)
                 }
 
                 aura.position.copy(gastly.position)
@@ -87,5 +85,7 @@ function createGhost(path: string, scale: number, aura: PointLight, offsetX = 0,
 
     })
 }
+
+
 
 export { createGhost, spawnGhosts }

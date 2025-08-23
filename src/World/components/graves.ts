@@ -15,6 +15,7 @@ function createGraves() {
         grave.position.set(x, 0.3, z)
         grave.rotation.y = (Math.random() - 0.5) * 0.4
         grave.rotation.z = (Math.random() - 0.5) * 0.4
+        grave.castShadow = true
         graves.add(grave)
     }
     return graves

@@ -27,6 +27,7 @@ function createPlane() {
     const plane = new Mesh(geometry, material)
     plane.position.y = 0
     plane.rotation.x = - Math.PI / 2
+    plane.receiveShadow = true
     return plane
 }
 
