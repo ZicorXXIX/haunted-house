@@ -10,8 +10,8 @@ import { Debugger } from "./systems/Debugger";
 import { Loop } from "./systems/Loop";
 import { createRenderer } from "./systems/renderer";
 import { Resizer } from "./systems/Resizer";
-import { PointLight, type Object3D } from "three";
-import { createGhost, spawnGhosts } from "./components/gastly";
+import { type Object3D } from "three";
+import { spawnGhosts } from "./components/gastly";
 import { createRandomlyMovingPointLights } from "./components/pointLights";
 
 class World {
@@ -49,12 +49,16 @@ class World {
         // debugUi.addMesh(house, "cube")
         this.scene.add(house, plane, lights, graves)
         this.scene.fog = fog
-        const resizer = new Resizer(container, this.camera, this.renderer)
+        new Resizer(container, this.camera, this.renderer)
     }
 
     private async setupGhosts() {
         try {
             const ghosts = await spawnGhosts(this.scene, { 'gastly': 3, 'haunter': 4 })
+            if (!ghosts) {
+                console.log('Error: No ghosts created')
+                return
+            }
 
             ghosts.forEach((ghost: Object3D) => {
                 this.loop.updatables.push(ghost)

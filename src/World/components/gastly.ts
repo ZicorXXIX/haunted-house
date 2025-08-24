@@ -1,5 +1,6 @@
-import { PointLight, Scene, Vector3, type Object3D } from "three";
+import { PointLight, Scene, type Object3D } from "three";
 import { GLTFLoader } from "three/examples/jsm/Addons.js";
+import type { AnimatedObject3d } from "./types";
 
 
 interface GhostModel {
@@ -15,7 +16,7 @@ const GHOST_MODELS: GhostModel[] = [
 ];
 
 async function spawnGhosts(scene: Scene, ghostsCount: { [key: string]: number }) {
-    const ghosts: Object3D[] = []
+    const ghosts: AnimatedObject3d[] = []
 
     for (const [ghostName, count] of Object.entries(ghostsCount)) {
         const model = GHOST_MODELS.find(m => m.name.toLowerCase() === ghostName.toLowerCase());
@@ -31,10 +32,10 @@ async function spawnGhosts(scene: Scene, ghostsCount: { [key: string]: number })
             const aura = new PointLight('#ff00ff', 2, 3)
 
             try {
-                const ghost = await createGhost(model?.path, model?.scale, aura, offsetX, offsetZ, radius, speed, model.flip)
+                const ghost = await createGhost(model?.path, model?.scale, aura, offsetX, offsetZ, radius, speed, model.flip as boolean)
                 scene.add(ghost)
                 scene.add(aura)
-                ghosts.push(ghost)
+                ghosts.push(ghost as AnimatedObject3d)
             } catch (error) {
                 console.log(error)
             }
@@ -52,8 +53,8 @@ function createGhost(path: string, scale: number, aura: PointLight, offsetX = 0,
     return new Promise((resolve, reject) => {
         loader.load(path, (gltf) => {
             gastly = gltf.scene
-            gastly.scale.set(scale, scale, scale)
-            gastly.tick = (delta: number) => {
+            gastly.scale.set(scale, scale, scale);
+            (gastly as AnimatedObject3d).tick = (delta: number) => {
                 const prevX = gastly.position.x
                 const prevZ = gastly.position.z
 

@@ -1,4 +1,4 @@
-import { Mesh, MeshBasicMaterial, MeshStandardMaterial, PlaneGeometry, RepeatWrapping } from "three"
+import { Mesh, MeshStandardMaterial, PlaneGeometry, RepeatWrapping } from "three"
 import { grassAoTexture, grassNormalTexture, grassRoughnessTexture, grassTexture } from "./textures"
 
 function createPlane() {

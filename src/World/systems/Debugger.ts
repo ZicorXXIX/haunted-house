@@ -163,7 +163,6 @@ class Debugger {
             const childName = child.name || `${child.type}_${index}`
 
             if ((child as Mesh).isMesh) {
-                const meshFolder = groupFolder.addFolder(child.name)
                 this.createMeshControls(child as Mesh, childName)
             } else if ((child as Light).isLight) {
                 const lightFolder = groupFolder.addFolder(childName)

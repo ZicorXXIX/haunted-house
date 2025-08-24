@@ -1,4 +1,5 @@
 import { PointLight, Scene } from "three"
+import type { AnimatedObject3d } from "./types"
 
 function createRandomlyMovingPointLights(scene: Scene) {
     const ghost1 = new PointLight('#ff00ff', 3, 3)
@@ -20,9 +21,9 @@ function createRandomlyMovingPointLights(scene: Scene) {
     ghost3.shadow.mapSize.width = 256
     ghost3.shadow.mapSize.height = 256
     ghost3.shadow.camera.far = 7
-    scene.add(ghost3)
+    scene.add(ghost3);
 
-    ghost1.tick = (elapsedTime: number) => {
+    (ghost1 as unknown as AnimatedObject3d).tick = (elapsedTime: number) => {
         const ghost1Angle = elapsedTime * 0.5
         ghost1.position.x = Math.cos(ghost1Angle) * 4
         ghost1.position.z = Math.sin(ghost1Angle) * 4
